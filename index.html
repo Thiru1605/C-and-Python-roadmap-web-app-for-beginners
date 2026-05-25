@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Code Mastery Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #18181f;
+    --surface3: #1f1f28;
+    --border: rgba(255,255,255,0.06);
+    --border2: rgba(255,255,255,0.12);
+    --text: #e8e8f0;
+    --muted: #8888a0;
+    --dim: #44445a;
+    --c-accent: #7c6dfa;
+    --c-accent2: #a594ff;
+    --py-accent: #f7c948;
+    --py-accent2: #ffd96b;
+    --green: #4ade80;
+    --red: #f87171;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* SIDEBAR */
+  .layout { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: 240px;
+    min-width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  .logo {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .logo-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .nav-section { padding: 16px 12px 8px; }
+  .nav-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--dim); font-weight: 600; padding: 0 8px; margin-bottom: 6px; }
+  .nav-btn {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 9px 12px; border-radius: var(--radius-sm);
+    border: none; background: none; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--muted);
+    text-align: left; transition: all .15s;
+  }
+  .nav-btn:hover { background: var(--surface2); color: var(--text); }
+  .nav-btn.active-c { background: rgba(124,109,250,0.12); color: var(--c-accent2); }
+  .nav-btn.active-py { background: rgba(247,201,72,0.1); color: var(--py-accent); }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .dot-c { background: var(--c-accent); }
+  .dot-py { background: var(--py-accent); }
+  .dot-dash { background: var(--dim); }
+  .sidebar-stats { padding: 16px; margin-top: auto; border-top: 1px solid var(--border); }
+  .stat-mini { margin-bottom: 12px; }
+  .stat-mini-label { font-size: 10px; color: var(--muted); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .mini-bar { height: 4px; background: var(--surface3); border-radius: 10px; overflow: hidden; }
+  .mini-fill-c { height: 100%; background: var(--c-accent); border-radius: 10px; transition: width .4s cubic-bezier(.4,0,.2,1); }
+  .mini-fill-py { height: 100%; background: var(--py-accent); border-radius: 10px; transition: width .4s cubic-bezier(.4,0,.2,1); }
+  .reset-btn {
+    width: 100%; padding: 8px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border2); background: none;
+    color: var(--muted); font-size: 11px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all .15s;
+  }
+  .reset-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* MAIN */
+  .main { flex: 1; overflow: hidden; }
+  .view { display: none; padding: 40px; max-width: 860px; }
+  .view.active { display: block; }
+
+  /* DASHBOARD */
+  .dash-header { margin-bottom: 36px; }
+  .dash-title { font-family: 'Space Mono', monospace; font-size: 26px; font-weight: 700; color: var(--text); }
+  .dash-sub { font-size: 14px; color: var(--muted); margin-top: 6px; }
+  .score-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 32px; }
+  .score-card {
+    background: var(--surface); border-radius: var(--radius);
+    border: 1px solid var(--border); padding: 24px;
+    position: relative; overflow: hidden;
+  }
+  .score-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .score-card.c-card::before { background: linear-gradient(90deg, var(--c-accent), var(--c-accent2)); }
+  .score-card.py-card::before { background: linear-gradient(90deg, var(--py-accent), var(--py-accent2)); }
+  .card-lang { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; margin-bottom: 10px; }
+  .c-card .card-lang { color: var(--c-accent2); }
+  .py-card .card-lang { color: var(--py-accent); }
+  .card-pct { font-family: 'Space Mono', monospace; font-size: 42px; font-weight: 700; line-height: 1; }
+  .c-card .card-pct { color: var(--c-accent2); }
+  .py-card .card-pct { color: var(--py-accent); }
+  .card-detail { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .card-bar { height: 6px; background: var(--surface3); border-radius: 10px; margin-top: 16px; overflow: hidden; }
+  .card-fill { height: 100%; border-radius: 10px; transition: width .5s cubic-bezier(.4,0,.2,1); }
+  .c-fill { background: linear-gradient(90deg, var(--c-accent), var(--c-accent2)); }
+  .py-fill { background: linear-gradient(90deg, var(--py-accent), var(--py-accent2)); }
+
+  .overall-card {
+    background: var(--surface); border-radius: var(--radius);
+    border: 1px solid var(--border); padding: 20px 24px;
+    margin-bottom: 32px; display: flex; align-items: center; gap: 20px;
+  }
+  .overall-ring { position: relative; width: 70px; height: 70px; flex-shrink: 0; }
+  .overall-ring svg { transform: rotate(-90deg); }
+  .ring-bg { fill: none; stroke: var(--surface3); stroke-width: 5; }
+  .ring-fg { fill: none; stroke: url(#ringGrad); stroke-width: 5; stroke-linecap: round; transition: stroke-dashoffset .6s cubic-bezier(.4,0,.2,1); }
+  .ring-text { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 15px; font-weight: 700; }
+  .overall-info { flex: 1; }
+  .overall-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .overall-sub { font-size: 12px; color: var(--muted); }
+
+  .streak-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 32px; }
+  .streak-card {
+    background: var(--surface); border-radius: var(--radius-sm);
+    border: 1px solid var(--border); padding: 16px; text-align: center;
+  }
+  .streak-val { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; color: var(--text); }
+  .streak-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .phase-summary { }
+  .phase-sum-title { font-size: 13px; font-weight: 600; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; }
+  .phase-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .phase-row:last-child { border-bottom: none; }
+  .phase-row-name { flex: 1; font-size: 13px; }
+  .phase-row-count { font-size: 12px; color: var(--muted); min-width: 60px; text-align: right; }
+  .phase-row-bar { width: 100px; height: 4px; background: var(--surface3); border-radius: 10px; overflow: hidden; }
+  .prb-fill { height: 100%; border-radius: 10px; transition: width .4s; }
+  .badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+  .badge-b { background: rgba(74,222,128,.12); color: #4ade80; }
+  .badge-i { background: rgba(247,201,72,.12); color: var(--py-accent); }
+  .badge-a { background: rgba(248,113,113,.12); color: var(--red); }
+  .badge-p { background: rgba(124,109,250,.12); color: var(--c-accent2); }
+
+  /* ROADMAP VIEW */
+  .view-header { margin-bottom: 28px; display: flex; align-items: flex-start; justify-content: space-between; }
+  .view-title { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; }
+  .view-prog { text-align: right; }
+  .view-prog-pct { font-family: 'Space Mono', monospace; font-size: 24px; font-weight: 700; }
+  .view-prog-label { font-size: 11px; color: var(--muted); }
+  .prog-bar-full { height: 6px; background: var(--surface3); border-radius: 10px; margin-bottom: 28px; overflow: hidden; }
+
+  .phase-block { margin-bottom: 12px; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+  .phase-head {
+    display: flex; align-items: center; gap: 12px; padding: 14px 18px;
+    background: var(--surface); cursor: pointer; user-select: none;
+    transition: background .15s;
+  }
+  .phase-head:hover { background: var(--surface2); }
+  .phase-head-name { flex: 1; font-size: 14px; font-weight: 500; }
+  .phase-head-stats { font-size: 12px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .ph-chevron { width: 18px; height: 18px; color: var(--dim); transition: transform .2s; flex-shrink: 0; }
+  .phase-block.open .ph-chevron { transform: rotate(180deg); }
+  .phase-topics { display: none; }
+  .phase-block.open .phase-topics { display: block; }
+
+  .topic-item {
+    display: flex; align-items: flex-start; gap: 14px; padding: 14px 18px;
+    border-top: 1px solid var(--border); background: var(--surface2);
+    transition: background .12s;
+  }
+  .topic-item:hover { background: var(--surface3); }
+  .checkbox {
+    width: 20px; height: 20px; min-width: 20px; border-radius: 6px;
+    border: 1.5px solid var(--border2); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px; transition: all .15s; flex-shrink: 0;
+  }
+  .checkbox.checked-c { background: var(--c-accent); border-color: var(--c-accent); }
+  .checkbox.checked-py { background: var(--py-accent); border-color: var(--py-accent); }
+  .checkbox svg { display: none; }
+  .checkbox.checked-c svg, .checkbox.checked-py svg { display: block; }
+  .topic-content { flex: 1; min-width: 0; }
+  .topic-name { font-size: 14px; font-weight: 500; margin-bottom: 6px; transition: color .15s; }
+  .topic-name.done { color: var(--muted); text-decoration: line-through; }
+  .topic-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; color: var(--muted); text-decoration: none;
+    padding: 3px 9px; border-radius: 20px;
+    border: 1px solid var(--border2); background: var(--surface);
+    transition: all .15s; margin-bottom: 8px;
+  }
+  .topic-link:hover { border-color: var(--c-accent); color: var(--c-accent2); }
+  .topic-link.py-link:hover { border-color: var(--py-accent); color: var(--py-accent); }
+  .qs { background: var(--surface); border-radius: var(--radius-sm); padding: 10px 12px; border-left: 2px solid var(--surface3); }
+  .qs-label { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--dim); font-weight: 600; margin-bottom: 5px; }
+  .q { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 2px; }
+
+  .confetti-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9999; overflow: hidden; }
+  .confetti-piece { position: absolute; width: 8px; height: 8px; top: -20px; animation: fall 1.5s ease-in forwards; border-radius: 2px; }
+  @keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-title">Code Mastery</div>
+      <div class="logo-sub">Your personal roadmap</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Overview</div>
+      <button class="nav-btn active-c" onclick="showView('dashboard')">
+        <span class="nav-dot dot-dash"></span> Dashboard
+      </button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">C Language</div>
+      <button class="nav-btn" id="nav-c-0" onclick="showView('c',0)"><span class="nav-dot dot-c"></span> Phase 1 – Foundations</button>
+      <button class="nav-btn" id="nav-c-1" onclick="showView('c',1)"><span class="nav-dot dot-c"></span> Phase 2 – Control & Functions</button>
+      <button class="nav-btn" id="nav-c-2" onclick="showView('c',2)"><span class="nav-dot dot-c"></span> Phase 3 – Arrays & Pointers</button>
+      <button class="nav-btn" id="nav-c-3" onclick="showView('c',3)"><span class="nav-dot dot-c"></span> Phase 4 – Memory & Structs</button>
+      <button class="nav-btn" id="nav-c-4" onclick="showView('c',4)"><span class="nav-dot dot-c"></span> Phase 5 – Advanced C</button>
+      <button class="nav-btn" id="nav-c-5" onclick="showView('c',5)"><span class="nav-dot dot-c"></span> Phase 6 – Professional C</button>
+    </div>
+    <div class="nav-section">
+      <div class="nav-label">Python</div>
+      <button class="nav-btn" id="nav-py-0" onclick="showView('py',0)"><span class="nav-dot dot-py"></span> Phase 1 – Foundations</button>
+      <button class="nav-btn" id="nav-py-1" onclick="showView('py',1)"><span class="nav-dot dot-py"></span> Phase 2 – Functions & Modules</button>
+      <button class="nav-btn" id="nav-py-2" onclick="showView('py',2)"><span class="nav-dot dot-py"></span> Phase 3 – OOP & Errors</button>
+      <button class="nav-btn" id="nav-py-3" onclick="showView('py',3)"><span class="nav-dot dot-py"></span> Phase 4 – Intermediate</button>
+      <button class="nav-btn" id="nav-py-4" onclick="showView('py',4)"><span class="nav-dot dot-py"></span> Phase 5 – Advanced Python</button>
+      <button class="nav-btn" id="nav-py-5" onclick="showView('py',5)"><span class="nav-dot dot-py"></span> Phase 6 – Professional</button>
+    </div>
+    <div class="sidebar-stats">
+      <div class="stat-mini">
+        <div class="stat-mini-label"><span>C Progress</span><span id="sb-c-pct">0%</span></div>
+        <div class="mini-bar"><div class="mini-fill-c" id="sb-c-bar" style="width:0%"></div></div>
+      </div>
+      <div class="stat-mini">
+        <div class="stat-mini-label"><span>Python Progress</span><span id="sb-py-pct">0%</span></div>
+        <div class="mini-bar"><div class="mini-fill-py" id="sb-py-bar" style="width:0%"></div></div>
+      </div>
+      <button class="reset-btn" onclick="resetProgress()">Reset all progress</button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dashboard">
+      <div class="dash-header">
+        <div class="dash-title">Dashboard</div>
+        <div class="dash-sub">Track your journey to professional level</div>
+      </div>
+
+      <div class="score-cards">
+        <div class="score-card c-card">
+          <div class="card-lang">C Language</div>
+          <div class="card-pct" id="d-c-pct">0%</div>
+          <div class="card-detail" id="d-c-detail">0 of 29 topics done</div>
+          <div class="card-bar"><div class="card-fill c-fill" id="d-c-bar" style="width:0%"></div></div>
+        </div>
+        <div class="score-card py-card">
+          <div class="card-lang">Python</div>
+          <div class="card-pct" id="d-py-pct">0%</div>
+          <div class="card-detail" id="d-py-detail">0 of 30 topics done</div>
+          <div class="card-bar"><div class="card-fill py-fill" id="d-py-bar" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="overall-card">
+        <div class="overall-ring">
+          <svg width="70" height="70" viewBox="0 0 70 70">
+            <defs>
+              <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#7c6dfa"/>
+                <stop offset="100%" stop-color="#f7c948"/>
+              </linearGradient>
+            </defs>
+            <circle class="ring-bg" cx="35" cy="35" r="30"/>
+            <circle class="ring-fg" id="ring-fg" cx="35" cy="35" r="30" stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+          </svg>
+          <div class="ring-text" id="ring-text">0%</div>
+        </div>
+        <div class="overall-info">
+          <div class="overall-title">Overall Mastery Score</div>
+          <div class="overall-sub" id="overall-sub">Complete topics across both languages to build your score</div>
+        </div>
+      </div>
+
+      <div class="streak-row">
+        <div class="streak-card">
+          <div class="streak-val" id="stat-total">0</div>
+          <div class="streak-label">Topics Done</div>
+        </div>
+        <div class="streak-card">
+          <div class="streak-val" id="stat-rem">59</div>
+          <div class="streak-label">Topics Remaining</div>
+        </div>
+        <div class="streak-card">
+          <div class="streak-val" id="stat-phases">0</div>
+          <div class="streak-label">Phases Complete</div>
+        </div>
+      </div>
+
+      <div class="phase-summary">
+        <div class="phase-sum-title">Phase breakdown</div>
+        <div id="phase-breakdown"></div>
+      </div>
+    </div>
+
+    <!-- PHASE VIEWS (generated by JS) -->
+  </main>
+</div>
+
+<div class="confetti-overlay" id="confetti"></div>
+
+<script>
+const ROADMAP = {
+  c: [
+    { phase:"Phase 1 — Foundations", badge:"beginner", badge_class:"badge-b", topics:[
+      {name:"Setting up environment (GCC, VS Code / CLion)", link:"https://www.youtube.com/watch?v=KJgsSFOSQv0", label:"CS50 C Setup", q:["What is the difference between a compiler and an interpreter?","What does GCC stand for and what does it produce?"]},
+      {name:"Hello World & program structure", link:"https://www.youtube.com/watch?v=87SH2Cn0s9A", label:"C Programming – freeCodeCamp", q:["Explain the role of main() in a C program.","What does #include <stdio.h> do and why is it needed?"]},
+      {name:"Variables, data types & type sizes", link:"https://www.youtube.com/watch?v=87SH2Cn0s9A", label:"Variables & Types", q:["What is the difference between int, long, and short?","How does sizeof() help write portable C code?"]},
+      {name:"Operators & expressions", link:"https://www.youtube.com/watch?v=87SH2Cn0s9A", label:"Operators – freeCodeCamp", q:["What is the difference between = and == in C?","Explain operator precedence with a real example."]},
+      {name:"Input & output (printf / scanf)", link:"https://www.youtube.com/watch?v=9uhSYDY4sxA", label:"printf & scanf – Neso Academy", q:["What does the format specifier %d mean in printf?","What happens when scanf reads an unexpected type?"]},
+    ]},
+    { phase:"Phase 2 — Control Flow & Functions", badge:"beginner", badge_class:"badge-b", topics:[
+      {name:"if / else / switch statements", link:"https://www.youtube.com/watch?v=87SH2Cn0s9A", label:"Control Flow – freeCodeCamp", q:["When would you prefer switch over if-else?","What is fall-through in a switch statement?"]},
+      {name:"Loops — for, while, do-while", link:"https://www.youtube.com/watch?v=87SH2Cn0s9A", label:"Loops – freeCodeCamp", q:["What is the difference between while and do-while?","How do break and continue change loop execution?"]},
+      {name:"Functions — declaration, definition, scope", link:"https://www.youtube.com/watch?v=aUfBelJPBsE", label:"Functions – Neso Academy", q:["What is the difference between call-by-value and call-by-reference?","What does a function prototype do?"]},
+      {name:"Recursion", link:"https://www.youtube.com/watch?v=kepBmgvWNDw", label:"Recursion – Neso Academy", q:["Write a recursive function to compute factorial.","What is a base case and why is it mandatory?"]},
+    ]},
+    { phase:"Phase 3 — Arrays, Strings & Pointers", badge:"intermediate", badge_class:"badge-i", topics:[
+      {name:"Arrays — 1D and 2D", link:"https://www.youtube.com/watch?v=87SH2Cn0s9A", label:"Arrays – freeCodeCamp", q:["How is a 2D array stored in memory in C?","What happens when you access an out-of-bounds index?"]},
+      {name:"Strings — char arrays & string.h", link:"https://www.youtube.com/watch?v=Bf8a6IC1dE8", label:"Strings – Neso Academy", q:["Why does C need a null terminator \\0 at the end of strings?","What is the difference between strcpy and strncpy?"]},
+      {name:"Pointers — declaration, dereferencing, arithmetic", link:"https://www.youtube.com/watch?v=zuegQmMdy8M", label:"Pointers – freeCodeCamp", q:["What is the difference between *p and &p?","What is a null pointer and when do you use it?"]},
+      {name:"Pointers & arrays — pointer to array, array of pointers", link:"https://www.youtube.com/watch?v=zuegQmMdy8M", label:"Pointer-Array Relationship", q:["How does array name relate to a pointer in C?","Write code to traverse an array using pointer arithmetic."]},
+      {name:"Pointers to functions", link:"https://www.youtube.com/watch?v=sxTFSDAZM8s", label:"Function Pointers – Jacob Sorber", q:["What is the syntax for declaring a pointer to a function?","Give a real-world use case for function pointers."]},
+    ]},
+    { phase:"Phase 4 — Memory & Structures", badge:"intermediate", badge_class:"badge-i", topics:[
+      {name:"Dynamic memory — malloc, calloc, realloc, free", link:"https://www.youtube.com/watch?v=_8-ht2AKyH4", label:"Dynamic Memory – freeCodeCamp", q:["What is a memory leak and how do you prevent it?","What is the difference between malloc and calloc?"]},
+      {name:"Structures & unions", link:"https://www.youtube.com/watch?v=3dPPFx9IQKE", label:"Structs – Neso Academy", q:["What is structure padding and why does it happen?","When would you use a union instead of a struct?"]},
+      {name:"Enumerations & typedef", link:"https://www.youtube.com/watch?v=87SH2Cn0s9A", label:"Enums & typedef – freeCodeCamp", q:["What integer value does the first enum constant get by default?","How does typedef improve code readability?"]},
+      {name:"File I/O — fopen, fread, fwrite, fclose", link:"https://www.youtube.com/watch?v=bOF-SpEAYgk", label:"File Handling – Neso Academy", q:["What is the difference between text mode and binary mode in fopen?","How do you check if a file was opened successfully?"]},
+    ]},
+    { phase:"Phase 5 — Advanced C", badge:"advanced", badge_class:"badge-a", topics:[
+      {name:"Linked lists — singly, doubly, circular", link:"https://www.youtube.com/watch?v=VOpjAHCee7c", label:"Linked Lists – freeCodeCamp", q:["How do you insert a node at the middle of a linked list?","What is the advantage of a doubly linked list over singly?"]},
+      {name:"Stacks & queues using C", link:"https://www.youtube.com/watch?v=wjI1WNcIntg", label:"Stack & Queue – freeCodeCamp", q:["Implement a stack using an array in C.","When would you use a queue over a stack?"]},
+      {name:"Bit manipulation & bitwise operators", link:"https://www.youtube.com/watch?v=ZRNO-ewsNcQ", label:"Bitwise Ops – Low Level Learning", q:["How do you check if a number is even using bitwise operators?","What does the XOR swap trick do?"]},
+      {name:"Preprocessor — macros, #define, #ifdef", link:"https://www.youtube.com/watch?v=mlnSEfBqRuA", label:"Preprocessor – Jacob Sorber", q:["What is the difference between a macro and a function?","Why should macro arguments be wrapped in parentheses?"]},
+      {name:"Multi-file projects & Makefiles", link:"https://www.youtube.com/watch?v=GExnnTaBELk", label:"Makefiles – CS50", q:["What is the role of a header file in a multi-file project?","Explain the difference between a .c file and a .h file."]},
+    ]},
+    { phase:"Phase 6 — Professional C", badge:"pro", badge_class:"badge-p", topics:[
+      {name:"Memory debugging with Valgrind & AddressSanitizer", link:"https://www.youtube.com/watch?v=bb1bTJtgXrI", label:"Valgrind – Jacob Sorber", q:["What types of errors can Valgrind detect?","What does 'definitely lost' mean in Valgrind output?"]},
+      {name:"POSIX system calls — fork, exec, pipes, signals", link:"https://www.youtube.com/watch?v=cex9XrZohlY", label:"POSIX & Syscalls", q:["What is the difference between fork() and exec()?","How do pipes enable inter-process communication?"]},
+      {name:"Sockets & network programming in C", link:"https://www.youtube.com/watch?v=bdIiTxtMaKA", label:"Sockets in C – Eduonix", q:["What is the difference between TCP and UDP sockets?","Walk through the socket(), bind(), listen(), accept() sequence."]},
+      {name:"Data structures — trees, graphs, hash tables", link:"https://www.youtube.com/watch?v=B31LgI4Y4DQ", label:"DSA in C – freeCodeCamp", q:["Implement a simple hash table with chaining in C.","What is the time complexity of BFS vs DFS?"]},
+      {name:"Writing clean, portable, production-grade C", link:"https://www.youtube.com/watch?v=443UNeGrFoM", label:"Clean C Code – Jacob Sorber", q:["List five common undefined behaviors in C.","What is the C standard (C99/C11/C17) and why does it matter?"]},
+    ]},
+  ],
+  py: [
+    { phase:"Phase 1 — Python Foundations", badge:"beginner", badge_class:"badge-b", topics:[
+      {name:"Setting up Python & virtual environments", link:"https://www.youtube.com/watch?v=YYXdXT2l-Gg", label:"Python Setup – freeCodeCamp", q:["Why should you use a virtual environment for each project?","What is the difference between pip and conda?"]},
+      {name:"Variables, types & type inference", link:"https://www.youtube.com/watch?v=_uQrJ0TkZlc", label:"Python Beginners – Mosh", q:["Why is Python called dynamically typed?","What does type() return and when would you use it?"]},
+      {name:"Strings & string methods", link:"https://www.youtube.com/watch?v=k9TUPpGqYTo", label:"Python Strings – Corey Schafer", q:["What is the difference between find() and index() on a string?","How do f-strings differ from .format()?"]},
+      {name:"Lists, tuples, sets & dictionaries", link:"https://www.youtube.com/watch?v=W8KRzm-HUcc", label:"Data Structures – Corey Schafer", q:["When would you use a tuple instead of a list?","What makes a dictionary lookup O(1) on average?"]},
+      {name:"Control flow — if / for / while", link:"https://www.youtube.com/watch?v=_uQrJ0TkZlc", label:"Control Flow – Mosh", q:["What does the else clause on a for loop do?","What is the walrus operator := and how does it work?"]},
+    ]},
+    { phase:"Phase 2 — Functions & Modules", badge:"beginner", badge_class:"badge-b", topics:[
+      {name:"Functions — *args, **kwargs, default params", link:"https://www.youtube.com/watch?v=9Os0o3wzS_I", label:"Functions – freeCodeCamp", q:["What is the difference between *args and **kwargs?","What happens if you use a mutable default argument?"]},
+      {name:"Lambda, map, filter, zip", link:"https://www.youtube.com/watch?v=hYzwCsKGRrg", label:"Lambda – Corey Schafer", q:["Rewrite a lambda with a regular def function.","What does zip() return when lists are different lengths?"]},
+      {name:"List & dict comprehensions", link:"https://www.youtube.com/watch?v=3dt4OGnU5sM", label:"Comprehensions – Corey Schafer", q:["Rewrite a for loop that builds a list using a comprehension.","What is a nested list comprehension and when should you avoid it?"]},
+      {name:"Modules & packages — import system", link:"https://www.youtube.com/watch?v=CqvZ3vGoGs0", label:"Modules – Corey Schafer", q:["What is the difference between import X and from X import Y?","What does __name__ == '__main__' guard do?"]},
+      {name:"File handling — open, read, write, context managers", link:"https://www.youtube.com/watch?v=Uh2ebFW8OYM", label:"File I/O – Corey Schafer", q:["Why use 'with open()' instead of f = open()?","What is the difference between read(), readline(), and readlines()?"]},
+    ]},
+    { phase:"Phase 3 — OOP & Error Handling", badge:"intermediate", badge_class:"badge-i", topics:[
+      {name:"Classes — __init__, methods, self", link:"https://www.youtube.com/watch?v=ZDa-Z5JzLYM", label:"OOP – Corey Schafer", q:["What is the difference between a class method and a static method?","What does __repr__ do and why should every class have one?"]},
+      {name:"Inheritance & MRO", link:"https://www.youtube.com/watch?v=rq8cL2XMM5M", label:"Inheritance – Corey Schafer", q:["What is Python's Method Resolution Order (MRO)?","What does super() do and why is it preferred?"]},
+      {name:"Dunder methods & operator overloading", link:"https://www.youtube.com/watch?v=3ohzBxoFHAY", label:"Dunder Methods – Corey Schafer", q:["Implement __len__ and __getitem__ to make a class iterable.","What is the difference between __eq__ and __hash__?"]},
+      {name:"Exceptions — try/except/finally, custom exceptions", link:"https://www.youtube.com/watch?v=NIWwJbo-9_8", label:"Exceptions – Corey Schafer", q:["Why should you catch specific exceptions rather than bare except?","How do you define and raise a custom exception class?"]},
+      {name:"Iterators & generators — yield", link:"https://www.youtube.com/watch?v=jTYiNjvnHZY", label:"Generators – Corey Schafer", q:["What is the difference between an iterator and a generator?","When would you use yield from?"]},
+    ]},
+    { phase:"Phase 4 — Intermediate Python", badge:"intermediate", badge_class:"badge-i", topics:[
+      {name:"Decorators — function & class decorators", link:"https://www.youtube.com/watch?v=FsAPt_9Bf3U", label:"Decorators – Corey Schafer", q:["Write a decorator that logs the execution time of a function.","What is functools.wraps and why do you need it?"]},
+      {name:"Context managers — __enter__/__exit__", link:"https://www.youtube.com/watch?v=-aKFBoZpiqA", label:"Context Managers – Corey Schafer", q:["Implement a custom context manager using a class.","What does contextlib.contextmanager allow you to do?"]},
+      {name:"Regular expressions — re module", link:"https://www.youtube.com/watch?v=K8L6KVGG-7o", label:"Regex – Corey Schafer", q:["What is the difference between re.match() and re.search()?","Write a regex to validate an email address."]},
+      {name:"Working with JSON, CSV & external files", link:"https://www.youtube.com/watch?v=9N6a-VLBa2I", label:"JSON & CSV – Corey Schafer", q:["What does json.dumps() do versus json.dump()?","What is DictReader in the csv module?"]},
+      {name:"Virtual environments & Poetry", link:"https://www.youtube.com/watch?v=BjEKDcGQkmk", label:"Poetry – ArjanCodes", q:["What is the purpose of requirements.txt?","What problem does poetry solve over raw pip?"]},
+    ]},
+    { phase:"Phase 5 — Advanced Python", badge:"advanced", badge_class:"badge-a", topics:[
+      {name:"Concurrency — threading, multiprocessing, asyncio", link:"https://www.youtube.com/watch?v=IEEhzQoKtQU", label:"Concurrency – Corey Schafer", q:["What is the GIL and how does it affect multithreading?","When should you use asyncio over threading?"]},
+      {name:"Type hints & mypy — static type checking", link:"https://www.youtube.com/watch?v=2xWhaALHTvU", label:"Type Hints – ArjanCodes", q:["What does Optional[str] mean in a type hint?","How does Protocol differ from ABC for structural subtyping?"]},
+      {name:"Testing — pytest, mocking, coverage", link:"https://www.youtube.com/watch?v=cHYq1MRoyI0", label:"pytest – Corey Schafer", q:["What is a fixture in pytest and how do you use it?","What does monkeypatch do in pytest?"]},
+      {name:"Design patterns in Python — SOLID principles", link:"https://www.youtube.com/watch?v=pTB0EiLXUC8", label:"Design Patterns – ArjanCodes", q:["Implement the Observer pattern in Python.","What does the Dependency Inversion Principle mean in practice?"]},
+      {name:"Data structures & algorithms in Python", link:"https://www.youtube.com/watch?v=pkYVOmU3MgA", label:"DSA in Python – freeCodeCamp", q:["Implement a binary search tree with insert and search.","What is the time complexity of Python's sorted() function?"]},
+    ]},
+    { phase:"Phase 6 — Professional Python", badge:"pro", badge_class:"badge-p", topics:[
+      {name:"Python packaging — pyproject.toml, publishing to PyPI", link:"https://www.youtube.com/watch?v=v6tALyc4C10", label:"Packaging – ArjanCodes", q:["What is the difference between sdist and wheel?","How do you version a Python package using semantic versioning?"]},
+      {name:"Databases — SQLAlchemy ORM & raw SQL", link:"https://www.youtube.com/watch?v=cYWiDiIUxQc", label:"SQLAlchemy – freeCodeCamp", q:["What is the N+1 query problem and how do you solve it?","What is a SQLAlchemy Session?"]},
+      {name:"REST APIs with FastAPI", link:"https://www.youtube.com/watch?v=0sOvCWFmrtA", label:"FastAPI – freeCodeCamp", q:["How does FastAPI use Python type hints for request validation?","What is Pydantic and why is it central to FastAPI?"]},
+      {name:"Data & ML — NumPy, pandas, scikit-learn basics", link:"https://www.youtube.com/watch?v=r-uOLxNrNk8", label:"NumPy & Pandas – freeCodeCamp", q:["What is broadcasting in NumPy?","What is the difference between loc and iloc in pandas?"]},
+      {name:"CI/CD, Docker & deploying Python apps", link:"https://www.youtube.com/watch?v=p1dwLKAxUxA", label:"Docker for Python – TechWorld with Nana", q:["What goes in a .dockerignore file?","How do GitHub Actions help automate testing and deployment?"]},
+    ]},
+  ]
+};
+
+// STATE
+let progress = {};
+function loadProgress(){ try{ const s=localStorage.getItem('cpm_v1'); if(s) progress=JSON.parse(s); }catch(e){} }
+function saveProgress(){ localStorage.setItem('cpm_v1', JSON.stringify(progress)); }
+function pKey(lang,pi,ti){ return `${lang}_${pi}_${ti}`; }
+function isChecked(lang,pi,ti){ return !!progress[pKey(lang,pi,ti)]; }
+function toggle(lang,pi,ti){ const k=pKey(lang,pi,ti); progress[k]=!progress[k]; saveProgress(); return progress[k]; }
+
+function counts(lang){
+  const phases=ROADMAP[lang]; let done=0,total=0;
+  phases.forEach((p,pi)=>p.topics.forEach((_,ti)=>{total++;if(isChecked(lang,pi,ti))done++;}));
+  return {done,total};
+}
+function phaseCounts(lang,pi){
+  const p=ROADMAP[lang][pi]; let done=0;
+  p.topics.forEach((_,ti)=>{if(isChecked(lang,pi,ti))done++;});
+  return {done,total:p.topics.length};
+}
+
+// VIEWS
+let currentView='dashboard';
+function showView(type, phaseIdx){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active-c','active-py'));
+  if(type==='dashboard'){
+    document.getElementById('view-dashboard').classList.add('active');
+    document.querySelectorAll('.nav-btn')[0].classList.add('active-c');
+    currentView='dashboard';
+    renderDashboard();
+  } else {
+    const id=`view-${type}-${phaseIdx}`;
+    document.getElementById(id).classList.add('active');
+    const nb=document.getElementById(`nav-${type}-${phaseIdx}`);
+    if(nb) nb.classList.add(type==='c'?'active-c':'active-py');
+    currentView=`${type}-${phaseIdx}`;
+    renderPhaseView(type,phaseIdx);
+  }
+  updateSidebar();
+}
+
+// BUILD PHASE VIEWS
+function buildViews(){
+  const main=document.querySelector('.main');
+  ['c','py'].forEach(lang=>{
+    ROADMAP[lang].forEach((phase,pi)=>{
+      const div=document.createElement('div');
+      div.className='view';
+      div.id=`view-${lang}-${pi}`;
+      div.innerHTML=`
+        <div class="view-header">
+          <div>
+            <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${lang==='c'?'var(--c-accent2)':'var(--py-accent)'};font-weight:600;margin-bottom:4px;">${lang==='c'?'C Language':'Python'}</div>
+            <div class="view-title">${phase.phase}</div>
+          </div>
+          <div class="view-prog">
+            <div class="view-prog-pct" id="vp-${lang}-${pi}" style="color:${lang==='c'?'var(--c-accent2)':'var(--py-accent)'}">0%</div>
+            <div class="view-prog-label">phase progress</div>
+          </div>
+        </div>
+        <div class="prog-bar-full" style="margin-bottom:28px;"><div class="${lang==='c'?'card-fill c-fill':'card-fill py-fill'}" id="vpb-${lang}-${pi}" style="height:100%;width:0%;border-radius:10px;transition:width .4s;"></div></div>
+        <div id="topics-${lang}-${pi}"></div>`;
+      main.appendChild(div);
+    });
+  });
+}
+
+function renderPhaseView(lang,pi){
+  const phase=ROADMAP[lang][pi];
+  const container=document.getElementById(`topics-${lang}-${pi}`);
+  container.innerHTML='';
+  phase.topics.forEach((topic,ti)=>{
+    const checked=isChecked(lang,pi,ti);
+    const div=document.createElement('div');
+    div.className='phase-block open';
+    div.innerHTML=`
+      <div class="topic-item" style="border-top:none;">
+        <div class="checkbox ${checked?(lang==='c'?'checked-c':'checked-py'):''}" id="cb-${lang}-${pi}-${ti}" onclick="handleCheck('${lang}',${pi},${ti})">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><polyline points="2,6 5,9 10,3" stroke="${lang==='c'?'#fff':'#111'}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="topic-content">
+          <div class="topic-name ${checked?'done':''}" id="tn-${lang}-${pi}-${ti}">${topic.name}</div>
+          <a href="${topic.link}" target="_blank" class="topic-link ${lang==='py'?'py-link':''}">▶ ${topic.label}</a>
+          <div class="qs">
+            <div class="qs-label">Practice questions</div>
+            ${topic.q.map((q,i)=>`<div class="q">${i+1}. ${q}</div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    container.appendChild(div);
+  });
+  updatePhaseProgress(lang,pi);
+}
+
+function handleCheck(lang,pi,ti){
+  const checked=toggle(lang,pi,ti);
+  const cb=document.getElementById(`cb-${lang}-${pi}-${ti}`);
+  const tn=document.getElementById(`tn-${lang}-${pi}-${ti}`);
+  cb.className=`checkbox ${checked?(lang==='c'?'checked-c':'checked-py'):''}`;
+  if(tn) tn.className=`topic-name ${checked?'done':''}`;
+  updatePhaseProgress(lang,pi);
+  updateSidebar();
+  if(checked) maybeConfetti();
+}
+
+function updatePhaseProgress(lang,pi){
+  const {done,total}=phaseCounts(lang,pi);
+  const pct=total?Math.round(done/total*100):0;
+  const pe=document.getElementById(`vp-${lang}-${pi}`);
+  const pb=document.getElementById(`vpb-${lang}-${pi}`);
+  if(pe) pe.textContent=pct+'%';
+  if(pb) pb.style.width=pct+'%';
+}
+
+function renderDashboard(){
+  const c=counts('c'), py=counts('py');
+  const cPct=c.total?Math.round(c.done/c.total*100):0;
+  const pyPct=py.total?Math.round(py.done/py.total*100):0;
+  const totalDone=c.done+py.done, totalAll=c.total+py.total;
+  const overallPct=totalAll?Math.round(totalDone/totalAll*100):0;
+
+  document.getElementById('d-c-pct').textContent=cPct+'%';
+  document.getElementById('d-c-detail').textContent=`${c.done} of ${c.total} topics done`;
+  document.getElementById('d-c-bar').style.width=cPct+'%';
+  document.getElementById('d-py-pct').textContent=pyPct+'%';
+  document.getElementById('d-py-detail').textContent=`${py.done} of ${py.total} topics done`;
+  document.getElementById('d-py-bar').style.width=pyPct+'%';
+
+  const circ=188.5;
+  document.getElementById('ring-fg').style.strokeDashoffset=circ-(circ*overallPct/100);
+  document.getElementById('ring-text').textContent=overallPct+'%';
+
+  document.getElementById('stat-total').textContent=totalDone;
+  document.getElementById('stat-rem').textContent=totalAll-totalDone;
+
+  let completedPhases=0;
+  ['c','py'].forEach(lang=>ROADMAP[lang].forEach((_,pi)=>{const{done,total}=phaseCounts(lang,pi);if(done===total&&total>0)completedPhases++;}));
+  document.getElementById('stat-phases').textContent=completedPhases;
+
+  const msgs=['Keep going! Every topic counts.','Making real progress!','You\'re almost halfway!','More than halfway done!','Almost there!','Professional level achieved! 🎉'];
+  const idx=Math.min(Math.floor(overallPct/20),5);
+  document.getElementById('overall-sub').textContent=overallPct>0?msgs[idx]:'Complete topics across both languages to build your score';
+
+  const breakdown=document.getElementById('phase-breakdown');
+  breakdown.innerHTML='';
+  ['c','py'].forEach(lang=>{
+    ROADMAP[lang].forEach((phase,pi)=>{
+      const{done,total}=phaseCounts(lang,pi);
+      const pct=total?Math.round(done/total*100):0;
+      const row=document.createElement('div');
+      row.className='phase-row';
+      row.innerHTML=`
+        <div style="width:6px;height:6px;border-radius:50%;background:${lang==='c'?'var(--c-accent)':'var(--py-accent)'};flex-shrink:0;"></div>
+        <div class="phase-row-name">${phase.phase}</div>
+        <span class="badge ${phase.badge_class}">${phase.badge}</span>
+        <div class="phase-row-bar"><div class="prb-fill" style="width:${pct}%;background:${lang==='c'?'var(--c-accent)':'var(--py-accent)'};"></div></div>
+        <div class="phase-row-count">${done}/${total}</div>`;
+      row.style.cursor='pointer';
+      row.onclick=()=>showView(lang,pi);
+      breakdown.appendChild(row);
+    });
+  });
+}
+
+function updateSidebar(){
+  const c=counts('c'), py=counts('py');
+  const cPct=c.total?Math.round(c.done/c.total*100):0;
+  const pyPct=py.total?Math.round(py.done/py.total*100):0;
+  document.getElementById('sb-c-pct').textContent=cPct+'%';
+  document.getElementById('sb-c-bar').style.width=cPct+'%';
+  document.getElementById('sb-py-pct').textContent=pyPct+'%';
+  document.getElementById('sb-py-bar').style.width=pyPct+'%';
+}
+
+function resetProgress(){
+  if(!confirm('Reset all progress? This cannot be undone.')) return;
+  progress={};
+  saveProgress();
+  showView('dashboard');
+}
+
+function maybeConfetti(){
+  const colors=['#7c6dfa','#f7c948','#4ade80','#f87171','#a594ff','#ffd96b'];
+  const overlay=document.getElementById('confetti');
+  for(let i=0;i<18;i++){
+    const piece=document.createElement('div');
+    piece.className='confetti-piece';
+    piece.style.left=Math.random()*100+'vw';
+    piece.style.background=colors[Math.floor(Math.random()*colors.length)];
+    piece.style.animationDelay=Math.random()*0.4+'s';
+    piece.style.animationDuration=(1+Math.random()*0.8)+'s';
+    piece.style.transform=`rotate(${Math.random()*360}deg)`;
+    overlay.appendChild(piece);
+    setTimeout(()=>piece.remove(), 2200);
+  }
+}
+
+// INIT
+loadProgress();
+buildViews();
+renderDashboard();
+updateSidebar();
+</script>
+</body>
+</html>
